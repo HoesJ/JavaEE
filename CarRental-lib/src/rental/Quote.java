@@ -2,8 +2,9 @@ package rental;
 
 import java.util.Date;
 
-public class Quote {
-
+public class Quote implements java.io.Serializable {
+    private static final long serialVersionUID = 6427799148267892169L;
+    
     private Date startDate;
     private Date endDate;
     private String carRenter;

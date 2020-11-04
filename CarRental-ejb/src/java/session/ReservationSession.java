@@ -46,6 +46,7 @@ public class ReservationSession implements ReservationSessionRemote {
             try {
                 CarRentalCompany company = RentalStore.getRental(companyName);
                 quotes.add(company.createQuote(constraints, client));
+                return;
             } catch (ReservationException exception) {
                 continue;
             }

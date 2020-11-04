@@ -1,11 +1,7 @@
 package rental;
 
-import java.io.Serializable;
-
-public class Reservation extends Quote implements Serializable {
+public class Reservation extends Quote {
     
-    private static final long serialVersionUID = 6427799148267892169L;
-
     private int carId;
     
     /***************
