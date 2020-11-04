@@ -118,6 +118,7 @@ public class CarRentalCompany {
                 availableCars.add(car);
             }
         }
+        System.out.println(cars);
         return availableCars;
     }
 
@@ -152,9 +153,11 @@ public class CarRentalCompany {
         logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
         List<Car> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
         if (availableCars.isEmpty()) {
+            logger.log(Level.WARNING, "FAILED");
             throw new ReservationException("Reservation failed, all cars of type " + quote.getCarType()
-                    + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate());
+                    + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate() + " for " + quote.getCarRenter());
         }
+        logger.log(Level.WARNING, "SUCCESS");
         Car car = availableCars.get((int) (Math.random() * availableCars.size()));
 
         Reservation res = new Reservation(quote, car.getId());

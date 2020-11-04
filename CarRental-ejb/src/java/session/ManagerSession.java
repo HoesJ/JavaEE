@@ -7,10 +7,15 @@ package session;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import rental.CarRentalCompany;
 import rental.RentalStore;
 
+@DeclareRoles({"Manager", "User"})
+
+@RolesAllowed({"Manager"})
 @Stateless
 public class ManagerSession implements ManagerSessionRemote {
 

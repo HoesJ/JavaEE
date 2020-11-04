@@ -3,25 +3,18 @@ package client;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import session.ManagerSessionRemote;
 import session.ReservationSessionRemote;
 
 public class Main extends AbstractTestAgency<ReservationSessionRemote, ManagerSessionRemote> {
-    
-    @EJB
-    static ReservationSessionRemote reservationSession;
-    
-    @EJB
-    static ManagerSessionRemote managerSession;
-    
+     
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
-        System.out.println("found rental companies: "+reservationSession.getAllRentalCompanies());
-        
+    public static void main(String[] args) throws Exception {        
         Main client = new Main("simpleTrips");
         client.run();
     }
@@ -32,12 +25,16 @@ public class Main extends AbstractTestAgency<ReservationSessionRemote, ManagerSe
 
     @Override
     protected ReservationSessionRemote getNewReservationSession(String name) throws Exception {
-        return reservationSession;
+        InitialContext ctx = new InitialContext();
+        ReservationSessionRemote session = (ReservationSessionRemote) ctx.lookup(ReservationSessionRemote.class.getName());
+        return session;
     }
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name) throws Exception {
-        return managerSession;
+        InitialContext ctx = new InitialContext();
+        ManagerSessionRemote session = (ManagerSessionRemote) ctx.lookup(ManagerSessionRemote.class.getName());
+        return session;
     }
 
     @Override

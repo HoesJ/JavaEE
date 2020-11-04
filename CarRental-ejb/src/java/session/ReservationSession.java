@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
 import rental.CarRentalCompany;
 import rental.CarType;
@@ -14,6 +15,8 @@ import rental.ReservationConstraints;
 import rental.ReservationException;
 import rental.Reservation;
 
+
+@PermitAll
 @Stateful
 public class ReservationSession implements ReservationSessionRemote {
 
@@ -69,7 +72,7 @@ public class ReservationSession implements ReservationSessionRemote {
                 throw exception;
             }
         }
-
+        quotes.clear();
         return reservations;
     }
     
