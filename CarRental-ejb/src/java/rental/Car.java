@@ -1,8 +1,10 @@
 package rental;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Entity;
@@ -78,6 +80,10 @@ public class Car implements Serializable {
     public void removeReservation(Reservation reservation) {
         // equals-method for Reservation is required!
         reservations.remove(reservation);
+    }
+    
+    public List<Reservation> getAllReservations() {
+        return new ArrayList<>(reservations);
     }
 
     public Set<Reservation> getReservations() {

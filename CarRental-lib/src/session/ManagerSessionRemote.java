@@ -8,6 +8,8 @@ import rental.Reservation;
 @Remote
 public interface ManagerSessionRemote {
     
+    public void addRentalCompany(String file);
+    
     public Set<CarType> getCarTypes(String company);
     
     public Set<Integer> getCarIds(String company,String type);
@@ -15,5 +17,7 @@ public interface ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type, int carId);
     
     public int getNumberOfReservations(String company, String type);
+    
+    public int getNumberOfReservationsByRenter(String name);
       
 }

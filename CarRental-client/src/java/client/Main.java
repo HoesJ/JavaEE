@@ -17,8 +17,14 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO: use updated manager interface to load cars into companies
-        new Main("trips").run();
+        new Main("trips").loadCarRentalCompanies().run();
+    }
+    
+    protected Main loadCarRentalCompanies() throws Exception {
+        ManagerSessionRemote ms = getNewManagerSession("");
+        ms.addRentalCompany("dockx.csv");
+        ms.addRentalCompany("hertz.csv");
+        return this;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     @Override
     protected void createQuote(ReservationSessionRemote session, String name, Date start, Date end, String carType, String region) throws Exception {
         ReservationConstraints constraints = new ReservationConstraints(start, end, carType, region);
-        session.createQuote(constraints, name);
+        session.createQuote(name, constraints);
     }
 
     @Override
@@ -51,14 +57,14 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
         return session.confirmQuotes();
     }
 
-    /*@Override;
+    @Override
     protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
         return ms.getNumberOfReservationsByRenter(clientName);
     }
 
-    @Override
-    protected int getNumberOfReservationsForCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
-        return ms.getNumberOfReservationsForCarType(carRentalName, carType);
+    /*@Override
+    protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
+        return ms.getNumberOfReservations(carRentalName, carType);
     }*/
 
     @Override
