@@ -1,80 +1,85 @@
 package session;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
-import rental.CarRentalCompany;
 import rental.CarType;
+import rental.Queries;
 import rental.Quote;
-import rental.RentalStore;
+import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
-import rental.Reservation;
-
 
 @PermitAll
 @Stateful
 public class ReservationSession implements ReservationSessionRemote {
 
-    private Set<Quote> quotes = new HashSet<>();
-
-    @Override
-    public HashSet<Quote> getCurrentQuotes() {
-        return new HashSet<Quote>(quotes);
-    }
+    private String renter;
+    private List<Quote> quotes = new LinkedList<Quote>();
+    private Queries queries = new Queries();
 
     @Override
     public Set<String> getAllRentalCompanies() {
-        return new HashSet<String>(RentalStore.getRentals().keySet());
+        return new HashSet<String>(queries.getAllRentalCompanies());
     }
-
+    
     @Override
-    public Set<CarType> getAvailableCarTypes(Date start, Date end) {
-        Set<CarType> types = new HashSet<>();
-        for (String companyName : getAllRentalCompanies()) {
-            CarRentalCompany company = RentalStore.getRental(companyName);
-            types.addAll(company.getAvailableCarTypes(start, end));
-        }
-
-        return types;
-    }
-
-    @Override
-    public void createQuote(ReservationConstraints constraints, String client) throws ReservationException {
-        for (String companyName : getAllRentalCompanies()) {
-            try {
-                CarRentalCompany company = RentalStore.getRental(companyName);
-                quotes.add(company.createQuote(constraints, client));
-                return;
-            } catch (ReservationException exception) {
-                continue;
+    public List<CarType> getAvailableCarTypes(Date start, Date end) {
+        List<CarType> availableCarTypes = new LinkedList<CarType>();
+        for(String crc : getAllRentalCompanies()) {
+            for(CarType ct : queries.getRentalCompany(crc).getAvailableCarTypes(start, end)) {
+                if(!availableCarTypes.contains(ct))
+                    availableCarTypes.add(ct);
             }
         }
+        return availableCarTypes;
+    }
 
-        throw new ReservationException("<" + RentalStore.getName() + "> No cars available to satisfy the given constraints.");
+    @Override
+    public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
+        try {
+            Quote out = queries.getRentalCompany(company).createQuote(constraints, renter);
+            quotes.add(out);
+            return out;
+        } catch(Exception e) {
+            throw new ReservationException(e);
+        }
+    }
+
+    @Override
+    public List<Quote> getCurrentQuotes() {
+        return quotes;
     }
 
     @Override
     public List<Reservation> confirmQuotes() throws ReservationException {
-        List<Reservation> reservations = new ArrayList<>();
-        for (Quote quote : quotes) {
-            try {
-                Reservation reservation = RentalStore.getRental(quote.getRentalCompany()).confirmQuote(quote);
-                reservations.add(reservation);
-            } catch (ReservationException exception) {
-                for (Reservation reservation : reservations) {
-                    RentalStore.getRental(reservation.getRentalCompany()).cancelReservation(reservation);
-                }
-                throw exception;
+        List<Reservation> done = new LinkedList<Reservation>();
+        try {
+            for (Quote quote : quotes) {
+                done.add(queries.getRentalCompany(quote.getRentalCompany()).confirmQuote(quote));
             }
+        } catch (Exception e) {
+            for(Reservation r:done)
+                queries.getRentalCompany(r.getRentalCompany()).cancelReservation(r);
+            throw new ReservationException(e);
         }
-        quotes.clear();
-        return reservations;
+        return done;
     }
-    
-    
+
+    @Override
+    public void setRenterName(String name) {
+        if (renter != null) {
+            throw new IllegalStateException("name already set");
+        }
+        renter = name;
+    }
+
+    @Override
+    public String getRenterName() {
+        return renter;
+    }
 }

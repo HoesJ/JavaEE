@@ -1,27 +1,30 @@
 package session;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Remote;
 import rental.CarType;
 import rental.Quote;
+import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
-import rental.Reservation;
 
 @Remote
 public interface ReservationSessionRemote {
     
-    public HashSet<Quote> getCurrentQuotes();
-
-    Set<String> getAllRentalCompanies();
+    public void setRenterName(String name);
     
-    Set<CarType> getAvailableCarTypes(Date start, Date end);
+    public String getRenterName();
     
-    void createQuote(ReservationConstraints constraints, String client) throws ReservationException;
+    public Set<String> getAllRentalCompanies();
     
-    List<Reservation> confirmQuotes() throws ReservationException;
+    public List<CarType> getAvailableCarTypes(Date start, Date end);
+    
+    public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException;
+    
+    public List<Quote> getCurrentQuotes();
+    
+    public List<Reservation> confirmQuotes() throws ReservationException;
     
 }

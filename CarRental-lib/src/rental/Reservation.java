@@ -1,18 +1,30 @@
 package rental;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Reservation extends Quote {
-    
-    private static final long serialVersionUID = 8427799148267892169L;
-    
+
     private int carId;
     
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    
     /***************
-	 * CONSTRUCTOR *
-	 ***************/
+     * CONSTRUCTOR *
+     ***************/
+    
+    public Reservation() {
+        super();
+    }
 
     public Reservation(Quote quote, int carId) {
     	super(quote.getCarRenter(), quote.getStartDate(), quote.getEndDate(), 
-    			quote.getRentalCompany(), quote.getCarType(), quote.getRentalPrice());
+    		quote.getRentalCompany(), quote.getCarType(), quote.getRentalPrice());
         this.carId = carId;
     }
     
@@ -33,4 +45,12 @@ public class Reservation extends Quote {
         return String.format("Reservation for %s from %s to %s at %s\nCar type: %s\tCar: %s\nTotal price: %.2f", 
                 getCarRenter(), getStartDate(), getEndDate(), getRentalCompany(), getCarType(), getCarId(), getRentalPrice());
     }	
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

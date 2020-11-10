@@ -1,52 +1,72 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package session;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import rental.Car;
 import rental.CarRentalCompany;
-import rental.RentalStore;
+import rental.CarType;
+import rental.Queries;
+import rental.Reservation;
 
 @DeclareRoles({"Manager", "User"})
-
 @RolesAllowed({"Manager"})
 @Stateless
 public class ManagerSession implements ManagerSessionRemote {
-
-    /**
-     * Get the number of reservations for a specific company and a car type.
-     */
+    
+    Queries queries = new Queries();
+    
     @Override
-    public int getNumberOfReservationsForCarType(String company, String type) {
-        return RentalStore.getRental(company).getNumberOfReservationsForCarType(type);
-    }
-
-    /**
-     * Get a map that gives the number of reservations per renter.
-     */
-    private Map<String, Integer> getNumberOfReservationsByRenter() {
-        Map<String, Integer> numResByRenter = new HashMap<>();
-        for (CarRentalCompany company : RentalStore.getRentals().values()) {
-            Map<String, Integer> companyNumResByRenter = company.getNumberOfReservationsByRenter();
-            for (Map.Entry<String, Integer> entry : companyNumResByRenter.entrySet()) {
-                numResByRenter.put(entry.getKey(), numResByRenter.getOrDefault(entry.getKey(), 0) + entry.getValue());
-            }
+    public Set<CarType> getCarTypes(String company) {
+        try {
+            
+            return new HashSet<CarType>(queries.getRentalCompany(company).getAllTypes());
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-
-        return numResByRenter;
     }
 
-    /**
-     * Get the number of reservations for a specific renter.
-     */
     @Override
-    public int getNumberOfReservationsByRenter(String name) {
-        return getNumberOfReservationsByRenter().getOrDefault(name, 0);
+    public Set<Integer> getCarIds(String company, String type) {
+        Set<Integer> out = new HashSet<Integer>();
+        try {
+            for(Car c: queries.getRentalCompany(company).getCars(type)){
+                out.add(c.getId());
+            }
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        return out;
     }
+
+    @Override
+    public int getNumberOfReservations(String company, String type, int id) {
+        try {
+            return queries.getRentalCompany(company).getCar(id).getReservations().size();
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getNumberOfReservations(String company, String type) {
+        Set<Reservation> out = new HashSet<Reservation>();
+        try {
+            for(Car c: queries.getRentalCompany(company).getCars(type)){
+                out.addAll(c.getReservations());
+            }
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+        return out.size();
+    }
+
 }

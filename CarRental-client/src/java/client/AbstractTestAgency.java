@@ -118,7 +118,7 @@ public abstract class AbstractTestAgency<ReservationSession, ManagerSession> ext
      *
      * @throws Exception if things go wrong, throw exception
      */
-    protected abstract int getNumberOfReservationsForCarType(ManagerSession ms, String carRentalName, String carType) throws Exception;    
+    protected abstract int getNumberOfReservationsByCarType(ManagerSession ms, String carRentalName, String carType) throws Exception;    
 
     public AbstractTestAgency(String scriptFile) {
         super(scriptFile);
@@ -202,7 +202,7 @@ public abstract class AbstractTestAgency<ReservationSession, ManagerSession> ext
         while (scriptReader.hasMoreTokens()) {
             String pars = scriptReader.nextToken();
             String[] pair = pars.split(":");
-            int nr = getNumberOfReservationsForCarType(rental, name, pair[0]);
+            int nr = getNumberOfReservationsByCarType(rental, name, pair[0]);
             if (Integer.parseInt(pair[1]) == nr) {
                 System.out.println(name + " has correct totals " + pars + " " + nr);
             } else {

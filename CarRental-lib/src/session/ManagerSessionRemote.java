@@ -1,16 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package session;
 
+import java.util.Set;
 import javax.ejb.Remote;
+import rental.CarType;
+import rental.Reservation;
 
 @Remote
 public interface ManagerSessionRemote {
     
-    int getNumberOfReservationsForCarType(String company, String type);
+    public Set<CarType> getCarTypes(String company);
     
-    int getNumberOfReservationsByRenter(String name);
+    public Set<Integer> getCarIds(String company,String type);
+    
+    public int getNumberOfReservations(String company, String type, int carId);
+    
+    public int getNumberOfReservations(String company, String type);
+      
 }
