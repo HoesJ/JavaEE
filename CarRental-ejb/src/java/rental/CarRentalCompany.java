@@ -21,10 +21,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class CarRentalCompany implements Serializable{
     
+    private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
+    
     @Id
     private String name;
-
-    private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     
     @OneToMany(cascade=ALL)
     private List<Car> cars;
@@ -32,6 +32,7 @@ public class CarRentalCompany implements Serializable{
     @OneToMany(cascade=ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
+    // TODO: persistent maken?
     private List<String> regions;
 
 	

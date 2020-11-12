@@ -25,6 +25,7 @@ import rental.Queries;
 import rental.Reservation;
 
 @DeclareRoles({"Manager", "User"})
+
 @RolesAllowed({"Manager"})
 @Stateless
 public class ManagerSession implements ManagerSessionRemote {
