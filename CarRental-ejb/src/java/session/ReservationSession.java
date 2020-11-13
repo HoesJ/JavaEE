@@ -17,26 +17,21 @@ import rental.ReservationException;
 @PermitAll
 @Stateful
 public class ReservationSession implements ReservationSessionRemote {
-
-    private String renter;
-    private List<Quote> quotes = new LinkedList<Quote>();
+    
     private Queries queries = new Queries();
+    
+    private String renter;
+    private List<Quote> quotes = new LinkedList<>();
 
     @Override
     public Set<String> getAllRentalCompanies() {
-        return new HashSet<String>(queries.getAllRentalCompanies());
+        return new HashSet<>(queries.getAllRentalCompanies());
     }
     
     @Override
-    public List<CarType> getAvailableCarTypes(Date start, Date end) {
-        List<CarType> availableCarTypes = new LinkedList<CarType>();
-        for(String crc : getAllRentalCompanies()) {
-            for(CarType ct : queries.getRentalCompany(crc).getAvailableCarTypes(start, end)) {
-                if(!availableCarTypes.contains(ct))
-                    availableCarTypes.add(ct);
-            }
-        }
-        return availableCarTypes;
+    public void getAvailableCarTypes(Date start, Date end) {
+        for (CarType type : queries.getAvailableCarTypes(start, end))
+            System.out.println(type);
     }
 
     @Override
@@ -57,17 +52,19 @@ public class ReservationSession implements ReservationSessionRemote {
 
     @Override
     public List<Reservation> confirmQuotes() throws ReservationException {
-        List<Reservation> done = new LinkedList<Reservation>();
+        List<Reservation> done = new LinkedList<>();
         try {
             for (Quote quote : quotes) {
                 done.add(queries.getRentalCompany(quote.getRentalCompany()).confirmQuote(quote));
             }
+            
+            quotes.clear();
+            return done;
         } catch (Exception e) {
-            for(Reservation r:done)
+            for (Reservation r : done)
                 queries.getRentalCompany(r.getRentalCompany()).cancelReservation(r);
             throw new ReservationException(e);
         }
-        return done;
     }
 
     @Override
@@ -82,4 +79,10 @@ public class ReservationSession implements ReservationSessionRemote {
     public String getRenterName() {
         return renter;
     }
+    
+    @Override
+    public String getCheapestCarType(Date start, Date end, String region) {
+        return queries.getCheapestAvailableCarType(start, end, region).getName();
+    }
+    
 }

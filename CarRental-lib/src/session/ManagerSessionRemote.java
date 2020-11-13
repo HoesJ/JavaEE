@@ -3,7 +3,6 @@ package session;
 import java.util.Set;
 import javax.ejb.Remote;
 import rental.CarType;
-import rental.Reservation;
 
 @Remote
 public interface ManagerSessionRemote {
@@ -19,5 +18,11 @@ public interface ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type);
     
     public int getNumberOfReservationsByRenter(String name);
-      
+    
+    public Set<String> getBestClients();
+    
+    public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year);
+    
+    public int getNumberOfReservationsByCarType(String carRentalName, String carType);
+    
 }

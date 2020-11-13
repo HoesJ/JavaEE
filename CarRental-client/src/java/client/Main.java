@@ -24,6 +24,12 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
         ManagerSessionRemote ms = getNewManagerSession("");
         ms.addRentalCompany("dockx.csv");
         ms.addRentalCompany("hertz.csv");
+        
+        // TODO: remove
+        // Add your own queries here
+        System.out.println("Result:");
+        System.out.println(ms.getCarTypes("Dockx"));
+        
         return this;
     }
 
@@ -64,22 +70,22 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ms.getBestClients();
     }
 
     @Override
     protected String getCheapestCarType(ReservationSessionRemote session, Date start, Date end, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return session.getCheapestCarType(start, end, region);
     }
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ms.getMostPopularCarTypeIn(carRentalCompanyName, year);
     }
 
     @Override
     protected int getNumberOfReservationsByCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ms.getNumberOfReservationsByCarType(carRentalName, carType);
     }
     
 }
