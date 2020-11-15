@@ -14,12 +14,10 @@ import java.util.logging.Logger;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
-
 @Entity
-public class CarRentalCompany implements Serializable{
+public class CarRentalCompany implements Serializable {
     
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     
@@ -32,7 +30,6 @@ public class CarRentalCompany implements Serializable{
     @OneToMany(cascade=ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
-    // TODO: persistent maken?
     private List<String> regions;
 
 	

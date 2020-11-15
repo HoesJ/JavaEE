@@ -98,7 +98,7 @@ public class Queries {
             "FROM Reservation reservation " +
             "GROUP BY resevation.carRenter";
 
-        return em.createQuote(
+        return em.createQuery(
             "SELECT t.carRenter" +
             "FROM (" + reservationsPerRenter + ") AS t " +
             "WHERE t.nbReservations = MAX(t.nbReservations)"
@@ -112,12 +112,13 @@ public class Queries {
         "WHERE YEAR(reservation.startDate) = :year " +
         "GROUP BY reservation.carType";
 
-        return em.createQuote(
+        /*return em.createQuery(
             "SELECT t.carType " +
             "FROM (" + reservationPerType + ") AS t " +
             "WHERE t.nbReservations = MAX(t.nbReservations)"
         ).setParameter("year", year)
-        .getFirstResult(); // TODO: or return list?
+        .getFirstResult(); // TODO: or return list?*/
+        return null;
     }
     
     public CarType getCheapestAvailableCarType(Date start, Date end, String region) {
@@ -132,14 +133,15 @@ public class Queries {
             "FROM Car car, CarType carType " +
             "WHERE car.autoID NOT IN (" + overlappingReservations + ") AND car.type = carType";
             
-        return em.createQuery(
+        /*return em.createQuery(
             "SELECT p.carType " + 
             "FROM (" + pricePerType + ") AS p " +
             "WHERE p.price = MIN(p.price)"
         ).setParameter("start", start)
         .setParameter("end", end)
         .setParameter("region", region)
-        .getFirstResult();
+        .getFirstResult();*/
+        return null;
     }
     
 }

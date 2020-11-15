@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,7 @@ public class Car implements Serializable {
 
     private int id;
     
-    @ManyToOne(cascade=ALL)
+    @ManyToOne(cascade=PERSIST)
     private CarType type;
     
     @OneToMany(cascade=ALL)
