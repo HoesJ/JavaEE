@@ -28,8 +28,6 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
         // TODO: remove
         // Add your own queries here
         System.out.println("Result:");
-        System.out.println(ms.getCarTypes("Dockx"));
-        
         return this;
     }
 

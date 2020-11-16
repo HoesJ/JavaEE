@@ -123,6 +123,8 @@ public class ManagerSession implements ManagerSessionRemote {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, "bad file", ex);
         } catch (IOException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            return; //TODO: remove this
         }
     }
     

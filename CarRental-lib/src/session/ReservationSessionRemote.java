@@ -20,7 +20,7 @@ public interface ReservationSessionRemote {
     
     public void getAvailableCarTypes(Date start, Date end);
     
-    public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException;
+    public Quote createQuote(String renter, ReservationConstraints constraints) throws ReservationException;
     
     public List<Quote> getCurrentQuotes();
     

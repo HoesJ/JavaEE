@@ -22,6 +22,12 @@ public class Queries {
     
     public CarRentalCompany getRentalCompany(String name) {
         return em.find(CarRentalCompany.class, name);
+        /*return (CarRentalCompany) em.createQuery(
+            "SELECT c " +
+            "FROM CarRentalCompany c " +
+            "WHERE c.name LIKE :name")
+            .setParameter("name", name)
+            .getResultList().get(0);*/
     }
     
     public List<String> getAllRentalCompanies() {
@@ -49,28 +55,31 @@ public class Queries {
     }
     
     public int getNumberOfReservations(String company, String type, int id) {
-        return em.createQuery(
+        Long l = (Long) em.createQuery(
             "SELECT COUNT(reservation.autoId) " +
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
             "WHERE company.name LIKE :companyName AND car.id = :id AND reservation.carId = :id")
             .setParameter("companyName", company).setParameter("id", id)
-            .getFirstResult();
+            .getResultList().get(0);
+        return l.intValue();
+        
     }
     
     public int getNumberOfReservations(String company, String type) {
-        return em.createQuery(
+        Long l = (Long) em.createQuery(
             "SELECT COUNT(reservation.autoId) " + 
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car, CarType carType " +
             "WHERE company.name LIKE :companyName AND carType.name LIKE :type AND reservation.carId = car.id " +
             "AND car.type = carType")
             .setParameter("companyName", company).setParameter("type", type)
-            .getFirstResult();
+            .getResultList().get(0);
+        return l.intValue();
     }
     
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         String overlappingReservations = 
-            "SELECT DISTINCT car.autoID " +
-            "FROM Reservation reservation, Company company, IN(company.cars) car " +
+            "SELECT DISTINCT car.autoId " +
+            "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
             "WHERE reservation.endDate >= :start AND reservation.startDate <= :end " +
                 "AND reservation.rentalCompany LIKE company.name AND reservation.carId = car.id";
 
@@ -84,12 +93,12 @@ public class Queries {
     }
     
     public int getNumberOfReservationsByRenter(String renter) {
-        return em.createQuery(
-            "SELECT COUNT(reservation.id) " +
+        return (int) em.createQuery(
+            "SELECT COUNT(reservation.autoId) " +
             "FROM Reservation reservation " +
             "WHERE reservation.carRenter LIKE :renterName"
         ).setParameter("renterName", renter)
-        .getFirstResult();
+        .getResultList().get(0);
     }
     
     public List<String> getBestClients() {
@@ -99,9 +108,9 @@ public class Queries {
             "GROUP BY resevation.carRenter";
 
         return em.createQuery(
-            "SELECT t.carRenter" +
+            "SELECT t.carRenter " +
             "FROM (" + reservationsPerRenter + ") AS t " +
-            "WHERE t.nbReservations = MAX(t.nbReservations)"
+            "HAVING t.nbReservations = MAX(t.nbReservations)"
         ).getResultList();
     }
     
@@ -112,36 +121,30 @@ public class Queries {
         "WHERE YEAR(reservation.startDate) = :year " +
         "GROUP BY reservation.carType";
 
-        /*return em.createQuery(
+        return (CarType) em.createQuery(
             "SELECT t.carType " +
             "FROM (" + reservationPerType + ") AS t " +
-            "WHERE t.nbReservations = MAX(t.nbReservations)"
+            "HAVING t.nbReservations = MAX(t.nbReservations)"
         ).setParameter("year", year)
-        .getFirstResult(); // TODO: or return list?*/
-        return null;
+        .getResultList().get(0); // TODO: or return list?
     }
     
     public CarType getCheapestAvailableCarType(Date start, Date end, String region) {
         String overlappingReservations = 
-            "SELECT DISTINCT car.autoID AS carId" +
-            "FROM Reservation reservation, Company company, IN(company.cars) car " +
+            "SELECT DISTINCT car.autoId AS carId " +
+            "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
             "WHERE reservation.endDate >= :start AND reservation.startDate <= :end AND :region MEMBER OF company.regions " +
                 "AND reservation.rentalCompany LIKE company.name AND reservation.carId = car.id";
-            
-        String pricePerType = 
-            "SELECT DISTINCT carType as carType, carType.rentalPricePerDay as price " +
+              
+        return (CarType) em.createQuery(
+            "SELECT DISTINCT carType " +
             "FROM Car car, CarType carType " +
-            "WHERE car.autoID NOT IN (" + overlappingReservations + ") AND car.type = carType";
-            
-        /*return em.createQuery(
-            "SELECT p.carType " + 
-            "FROM (" + pricePerType + ") AS p " +
-            "WHERE p.price = MIN(p.price)"
+            "WHERE car.autoId NOT IN (" + overlappingReservations + ") AND car.type = carType " +
+            "HAVING carType.rentalPricePerDay = MIN(carType.rentalPricePerDay)"
         ).setParameter("start", start)
         .setParameter("end", end)
         .setParameter("region", region)
-        .getFirstResult();*/
-        return null;
+        .getResultList().get(0);
     }
     
 }

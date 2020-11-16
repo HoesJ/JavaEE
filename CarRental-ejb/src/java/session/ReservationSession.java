@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateful;
+import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Queries;
 import rental.Quote;
@@ -35,19 +36,30 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     public void getAvailableCarTypes(Date start, Date end) {
-        for (CarType type : queries.getAvailableCarTypes(start, end))
+        List<CarType> res = queries.getAvailableCarTypes(start, end);
+        for (Object type : res)
             System.out.println(type);
     }
 
     @Override
-    public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
-        try {
-            Quote out = queries.getRentalCompany(company).createQuote(constraints, renter);
-            quotes.add(out);
-            return out;
-        } catch(Exception e) {
-            throw new ReservationException(e);
+    public Quote createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
+        //try {
+	for (String company : queries.getAllRentalCompanies()) {
+            try {
+                System.out.println("HALOOO");
+                return queries.getRentalCompany(company).createQuote(constraints, renter);
+            } catch (ReservationException exception) {
+                System.out.println(exception.getMessage());
+                continue;
+            }
+            // For if there is no car with the given car type in the current car rental company.
+            catch (IllegalArgumentException exception) {
+                System.out.println(exception.getMessage());
+                continue;   
+            }
         }
+		
+	throw new ReservationException("<" + renter + "> No cars available to satisfy the given constraints.");
     }
 
     @Override
