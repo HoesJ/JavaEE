@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
-import javax.ejb.EJBContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,8 +26,8 @@ public class ReservationSession implements ReservationSessionRemote {
     
     private Queries queries = new Queries();
     
-    @Resource 
-    private EJBContext context;
+    @Resource
+    private javax.ejb.SessionContext context;
     
     private String renter;
     private List<Quote> quotes = new LinkedList<>();

@@ -3,6 +3,7 @@ package client;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import rental.CarType;
 import rental.Reservation;
@@ -12,6 +13,9 @@ import session.ReservationSessionRemote;
 
 public class Main extends AbstractTestManagement<ReservationSessionRemote, ManagerSessionRemote> {
 
+    @EJB
+    private static ManagerSessionRemote ms;
+    
     public Main(String scriptFile) {
         super(scriptFile);
     }
@@ -40,9 +44,7 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name) throws Exception {
-        InitialContext ctx = new InitialContext();
-        ManagerSessionRemote session = (ManagerSessionRemote) ctx.lookup(ManagerSessionRemote.class.getName());
-        return session;
+        return ms;
     }
 
     @Override
