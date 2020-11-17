@@ -75,7 +75,7 @@ public class ReservationSession implements ReservationSessionRemote {
         try {
             List<Reservation> done = new LinkedList<>();
             for (Quote quote : quotes) {
-                done.add(queries.getRentalCompany(em, quote.getRentalCompany()).confirmQuote(em, quote));
+                done.add(queries.getRentalCompany(em, quote.getRentalCompany()).confirmQuote(quote));
             }
             
             quotes.clear();

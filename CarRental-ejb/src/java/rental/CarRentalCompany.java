@@ -177,7 +177,7 @@ public class CarRentalCompany implements Serializable {
                 / (1000 * 60 * 60 * 24D));
     }
 
-    public Reservation confirmQuote(EntityManager em, Quote quote) throws ReservationException {
+    public Reservation confirmQuote(Quote quote) throws ReservationException {
         logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
         List<Car> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
         if (availableCars.isEmpty()) {
@@ -188,7 +188,6 @@ public class CarRentalCompany implements Serializable {
 
         Reservation res = new Reservation(quote, car.getId());
         car.addReservation(res);
-        em.persist(car);    // TODO: werkt nog niet
         return res;
     }
 
