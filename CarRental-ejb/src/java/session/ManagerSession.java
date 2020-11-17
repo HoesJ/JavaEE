@@ -35,7 +35,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<CarType> getCarTypes(String company) {
         try {
-            return new HashSet<>(queries.getCarTypes(company));
+            return new HashSet<>(queries.getCarTypes(em, company));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -45,7 +45,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<Integer> getCarIds(String company, String type) {
         try {
-            return new HashSet<>(queries.getCarIds(company, type));
+            return new HashSet<>(queries.getCarIds(em, company, type));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -55,7 +55,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         try {
-            return queries.getNumberOfReservations(company, type, id);
+            return queries.getNumberOfReservations(em, company, type, id);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -65,7 +65,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type) {
         try {
-            return queries.getNumberOfReservations(company, type);
+            return queries.getNumberOfReservations(em, company, type);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -75,7 +75,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservationsByRenter(String name) {
         try {
-            return queries.getNumberOfReservationsByRenter(name);
+            return queries.getNumberOfReservationsByRenter(em, name);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -85,7 +85,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<String> getBestClients() {
         try {
-            return new HashSet<>(queries.getBestClients());
+            return new HashSet<>(queries.getBestClients(em));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -95,7 +95,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
         try {
-            return queries.getMostPopularCarType(carRentalCompanyName, year);
+            return queries.getMostPopularCarType(em, carRentalCompanyName, year);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -105,7 +105,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservationsByCarType(String carRentalName, String carType) {
         try {
-            return queries.getNumberOfReservations(carRentalName, carType);
+            return queries.getNumberOfReservations(em, carRentalName, carType);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
