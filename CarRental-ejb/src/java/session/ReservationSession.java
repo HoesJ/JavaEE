@@ -35,21 +35,21 @@ public class ReservationSession implements ReservationSessionRemote {
 
     @Override
     public Set<String> getAllRentalCompanies() {
-        return new HashSet<>(queries.getAllRentalCompanies());
+        return new HashSet<>(queries.getAllRentalCompanies(em));
     }
     
     @Override
     public void getAvailableCarTypes(Date start, Date end) {
-        List<CarType> res = queries.getAvailableCarTypes(start, end);
+        List<CarType> res = queries.getAvailableCarTypes(em, start, end);
         for (Object type : res)
             System.out.println(type);
     }
 
     @Override
     public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
-	for (String company : queries.getAllRentalCompanies()) {
+	for (String company : queries.getAllRentalCompanies(em)) {
             try {
-                quotes.add(queries.getRentalCompany(company).createQuote(constraints, renter));
+                quotes.add(queries.getRentalCompany(em, company).createQuote(constraints, renter));
                 return;
             } catch (ReservationException exception) {
                 System.out.println(exception.getMessage());
@@ -75,7 +75,7 @@ public class ReservationSession implements ReservationSessionRemote {
         try {
             List<Reservation> done = new LinkedList<>();
             for (Quote quote : quotes) {
-                done.add(queries.getRentalCompany(quote.getRentalCompany()).confirmQuote(em, quote));
+                done.add(queries.getRentalCompany(em, quote.getRentalCompany()).confirmQuote(em, quote));
             }
             
             quotes.clear();
@@ -101,7 +101,7 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     public String getCheapestCarType(Date start, Date end, String region) {
-        return queries.getCheapestAvailableCarType(start, end, region).getName();
+        return queries.getCheapestAvailableCarType(em, start, end, region).getName();
     }
     
 }

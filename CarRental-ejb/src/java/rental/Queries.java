@@ -8,22 +8,11 @@ package rental;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class Queries {
     
-    public Queries() {
-    }
-    
     public CarRentalCompany getRentalCompany(EntityManager em, String name) {
         return em.find(CarRentalCompany.class, name);
-        /*return (CarRentalCompany) em.createQuery(
-            "SELECT c " +
-            "FROM CarRentalCompany c " +
-            "WHERE c.name LIKE :name")
-            .setParameter("name", name)
-            .getResultList().get(0);*/
     }
     
     public List<String> getAllRentalCompanies(EntityManager em) {
