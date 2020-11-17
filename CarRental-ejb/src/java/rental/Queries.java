@@ -13,14 +13,10 @@ import javax.persistence.Persistence;
 
 public class Queries {
     
-    EntityManager em;
-    
     public Queries() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("CarRental-ejbPU");
-        this.em = emf.createEntityManager();
     }
     
-    public CarRentalCompany getRentalCompany(String name) {
+    public CarRentalCompany getRentalCompany(EntityManager em, String name) {
         return em.find(CarRentalCompany.class, name);
         /*return (CarRentalCompany) em.createQuery(
             "SELECT c " +
@@ -30,13 +26,13 @@ public class Queries {
             .getResultList().get(0);*/
     }
     
-    public List<String> getAllRentalCompanies() {
+    public List<String> getAllRentalCompanies(EntityManager em) {
         return em.createQuery(
             "SELECT c.name FROM CarRentalCompany c")
             .getResultList();
     }
     
-    public List<CarType> getCarTypes(String company) {
+    public List<CarType> getCarTypes(EntityManager em, String company) {
         return em.createQuery(
             "SELECT carType " + 
             "FROM CarRentalCompany company, IN(company.carTypes) carType " +
@@ -45,7 +41,7 @@ public class Queries {
             .getResultList();
     }
     
-    public List<Integer> getCarIds(String company, String type) {
+    public List<Integer> getCarIds(EntityManager em, String company, String type) {
         return em.createQuery(
             "SELECT car.id " + 
             "FROM CarRentalCompany company, CarType carType, IN(company.cars) car " + 
@@ -54,7 +50,7 @@ public class Queries {
             .getResultList();
     }
     
-    public int getNumberOfReservations(String company, String type, int id) {
+    public int getNumberOfReservations(EntityManager em, String company, String type, int id) {
         Long l = (Long) em.createQuery(
             "SELECT COUNT(reservation.autoId) " +
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
@@ -65,7 +61,7 @@ public class Queries {
         
     }
     
-    public int getNumberOfReservations(String company, String type) {
+    public int getNumberOfReservations(EntityManager em, String company, String type) {
         Long l = (Long) em.createQuery(
             "SELECT COUNT(reservation.autoId) " + 
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car, CarType carType " +
@@ -76,7 +72,7 @@ public class Queries {
         return l.intValue();
     }
     
-    public List<CarType> getAvailableCarTypes(Date start, Date end) {
+    public List<CarType> getAvailableCarTypes(EntityManager em, Date start, Date end) {
         String overlappingReservations = 
             "SELECT DISTINCT car.autoId " +
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
@@ -92,7 +88,7 @@ public class Queries {
             .getResultList();
     }
     
-    public int getNumberOfReservationsByRenter(String renter) {
+    public int getNumberOfReservationsByRenter(EntityManager em, String renter) {
         return (int) em.createQuery(
             "SELECT COUNT(reservation.autoId) " +
             "FROM Reservation reservation " +
@@ -101,7 +97,7 @@ public class Queries {
         .getResultList().get(0);
     }
     
-    public List<String> getBestClients() {
+    public List<String> getBestClients(EntityManager em) {
         String reservationsPerRenter = 
             "SELECT resevation.carRenter AS carRenter, COUNT(reservation.autoId) AS nbReservations" +
             "FROM Reservation reservation " +
@@ -114,7 +110,7 @@ public class Queries {
         ).getResultList();
     }
     
-    public CarType getMostPopularCarType(String company, int year) {
+    public CarType getMostPopularCarType(EntityManager em, String company, int year) {
         String reservationPerType =
         "SELECT reservation.carType AS carType, COUNT(reservation.autoId) AS nbReservations" +
         "FROM Reservation reservation " +
@@ -129,7 +125,7 @@ public class Queries {
         .getResultList().get(0); // TODO: or return list?
     }
     
-    public CarType getCheapestAvailableCarType(Date start, Date end, String region) {
+    public CarType getCheapestAvailableCarType(EntityManager em, Date start, Date end, String region) {
         String overlappingReservations = 
             "SELECT DISTINCT car.autoId AS carId " +
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
