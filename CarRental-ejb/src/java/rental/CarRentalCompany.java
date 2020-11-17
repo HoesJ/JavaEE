@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -176,7 +177,7 @@ public class CarRentalCompany implements Serializable {
                 / (1000 * 60 * 60 * 24D));
     }
 
-    public Reservation confirmQuote(Quote quote) throws ReservationException {
+    public Reservation confirmQuote(EntityManager em, Quote quote) throws ReservationException {
         logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
         List<Car> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
         if (availableCars.isEmpty()) {
@@ -187,6 +188,7 @@ public class CarRentalCompany implements Serializable {
 
         Reservation res = new Reservation(quote, car.getId());
         car.addReservation(res);
+        em.persist(car);    // TODO: werkt nog niet
         return res;
     }
 

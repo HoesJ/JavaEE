@@ -9,7 +9,8 @@ import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateful;
-import rental.CarRentalCompany;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import rental.CarType;
 import rental.Queries;
 import rental.Quote;
@@ -20,6 +21,9 @@ import rental.ReservationException;
 @PermitAll
 @Stateful
 public class ReservationSession implements ReservationSessionRemote {
+    
+    @PersistenceContext
+    EntityManager em;
     
     private Queries queries = new Queries();
     
@@ -42,12 +46,11 @@ public class ReservationSession implements ReservationSessionRemote {
     }
 
     @Override
-    public Quote createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
-        //try {
+    public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
 	for (String company : queries.getAllRentalCompanies()) {
             try {
-                System.out.println("HALOOO");
-                return queries.getRentalCompany(company).createQuote(constraints, renter);
+                quotes.add(queries.getRentalCompany(company).createQuote(constraints, renter));
+                return;
             } catch (ReservationException exception) {
                 System.out.println(exception.getMessage());
                 continue;
@@ -72,7 +75,7 @@ public class ReservationSession implements ReservationSessionRemote {
         try {
             List<Reservation> done = new LinkedList<>();
             for (Quote quote : quotes) {
-                done.add(queries.getRentalCompany(quote.getRentalCompany()).confirmQuote(quote));
+                done.add(queries.getRentalCompany(quote.getRentalCompany()).confirmQuote(em, quote));
             }
             
             quotes.clear();
