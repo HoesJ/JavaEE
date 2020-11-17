@@ -78,12 +78,13 @@ public class Queries {
     }
     
     public int getNumberOfReservationsByRenter(EntityManager em, String renter) {
-        return (int) em.createQuery(
+        Long l = (Long) em.createQuery(
             "SELECT COUNT(reservation.autoId) " +
             "FROM Reservation reservation " +
             "WHERE reservation.carRenter LIKE :renterName"
         ).setParameter("renterName", renter)
         .getResultList().get(0);
+        return l.intValue();
     }
     
     public List<String> getBestClients(EntityManager em) {
@@ -115,7 +116,7 @@ public class Queries {
     }
     
     public CarType getCheapestAvailableCarType(EntityManager em, Date start, Date end, String region) {
-        String overlappingReservations = 
+        /*String overlappingReservations = 
             "SELECT DISTINCT car.autoId AS carId " +
             "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
             "WHERE reservation.endDate >= :start AND reservation.startDate <= :end AND :region MEMBER OF company.regions " +
@@ -126,6 +127,27 @@ public class Queries {
             "FROM Car car, CarType carType " +
             "WHERE car.autoId NOT IN (" + overlappingReservations + ") AND car.type = carType " +
             "HAVING carType.rentalPricePerDay = MIN(carType.rentalPricePerDay)"
+        ).setParameter("start", start)
+        .setParameter("end", end)
+        .setParameter("region", region)
+        .getResultList().get(0); */
+        
+        String overlappingReservations = 
+            "SELECT DISTINCT car.autoId " +
+            "FROM Reservation reservation, CarRentalCompany company, IN(company.cars) car " +
+            "WHERE reservation.endDate >= :start AND reservation.startDate <= :end " +
+                "AND reservation.rentalCompany LIKE company.name AND reservation.carId = car.id";
+        
+        String cheapestPrice =
+            "SELECT MIN(car.type.rentalPricePerDay) " +
+            "FROM CarRentalCompany company, In(company.cars) car " +
+            "WHERE car.autoId NOT IN (" + overlappingReservations + ") AND :region MEMBER OF company.regions ";
+              
+        return (CarType) em.createQuery(
+            "SELECT DISTINCT car.type " +
+            "FROM CarRentalCompany company, In(company.cars) car " +
+            "WHERE car.autoId NOT IN (" + overlappingReservations + ") AND :region MEMBER OF company.regions " +
+            "AND car.type.rentalPricePerDay IN (" + cheapestPrice + ")"
         ).setParameter("start", start)
         .setParameter("end", end)
         .setParameter("region", region)

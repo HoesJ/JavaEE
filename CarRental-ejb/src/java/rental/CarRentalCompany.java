@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.persistence.CascadeType.ALL;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
@@ -31,6 +32,7 @@ public class CarRentalCompany implements Serializable {
     @OneToMany(cascade=ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
+    @ElementCollection
     private List<String> regions;
 
 	
