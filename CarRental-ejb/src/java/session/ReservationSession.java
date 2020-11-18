@@ -42,7 +42,6 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO: is transactie nodig als je slechts 1 keer leest in de database?
     public void getAvailableCarTypes(Date start, Date end) {
         List<CarType> res = queries.getAvailableCarTypes(em, start, end);
         for (Object type : res)
@@ -51,7 +50,7 @@ public class ReservationSession implements ReservationSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO: is transactie nodig (voor als manager extra CRC toevoegt)?
+    // TODO: is transactie nodig omdat we meerdere queries doen?
     public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
 	for (String company : queries.getAllRentalCompanies(em)) {
             try {
