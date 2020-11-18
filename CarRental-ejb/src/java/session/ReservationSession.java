@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import rental.CarType;
@@ -33,11 +35,14 @@ public class ReservationSession implements ReservationSessionRemote {
     private List<Quote> quotes = new LinkedList<>();
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public Set<String> getAllRentalCompanies() {
         return new HashSet<>(queries.getAllRentalCompanies(em));
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
+    // TODO: is transactie nodig als je slechts 1 keer leest in de database?
     public void getAvailableCarTypes(Date start, Date end) {
         List<CarType> res = queries.getAvailableCarTypes(em, start, end);
         for (Object type : res)
@@ -45,6 +50,8 @@ public class ReservationSession implements ReservationSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
+    // TODO: is transactie nodig (voor als manager extra CRC toevoegt)?
     public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
 	for (String company : queries.getAllRentalCompanies(em)) {
             try {
@@ -65,6 +72,7 @@ public class ReservationSession implements ReservationSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public List<Quote> getCurrentQuotes() {
         return quotes;
     }
@@ -86,6 +94,7 @@ public class ReservationSession implements ReservationSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public void setRenterName(String name) {
         if (renter != null) {
             throw new IllegalStateException("name already set");
@@ -94,11 +103,14 @@ public class ReservationSession implements ReservationSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public String getRenterName() {
         return renter;
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
+    // TODO: transactie nodig?
     public String getCheapestCarType(Date start, Date end, String region) {
         return queries.getCheapestAvailableCarType(em, start, end, region).getName();
     }

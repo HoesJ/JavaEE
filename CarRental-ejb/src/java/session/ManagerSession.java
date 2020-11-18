@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import rental.Car;
@@ -33,6 +35,7 @@ public class ManagerSession implements ManagerSessionRemote {
     private Queries queries = new Queries();
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public Set<CarType> getCarTypes(String company) {
         try {
             return new HashSet<>(queries.getCarTypes(em, company));
@@ -43,6 +46,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public Set<Integer> getCarIds(String company, String type) {
         try {
             return new HashSet<>(queries.getCarIds(em, company, type));
@@ -53,6 +57,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservations(String company, String type, int id) {
         try {
             return queries.getNumberOfReservations(em, company, type, id);
@@ -63,6 +68,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservations(String company, String type) {
         try {
             return queries.getNumberOfReservations(em, company, type);
@@ -73,6 +79,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservationsByRenter(String name) {
         try {
             return queries.getNumberOfReservationsByRenter(em, name);
@@ -83,6 +90,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public Set<String> getBestClients() {
         try {
             return new HashSet<>(queries.getBestClients(em));
@@ -93,6 +101,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
         try {
             return queries.getMostPopularCarType(em, carRentalCompanyName, year);
@@ -103,6 +112,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservationsByCarType(String carRentalName, String carType) {
         try {
             return queries.getNumberOfReservations(em, carRentalName, carType);
