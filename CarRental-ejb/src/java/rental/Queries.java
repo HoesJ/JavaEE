@@ -21,6 +21,12 @@ public class Queries {
             .getResultList();
     }
     
+    public List<CarRentalCompany> getAllRentalCompaniesObject(EntityManager em) {
+        return em.createQuery(
+            "SELECT c FROM CarRentalCompany c")
+            .getResultList();
+    }
+    
     public List<CarType> getCarTypes(EntityManager em, String company) {
         return em.createQuery(
             "SELECT carType " + 

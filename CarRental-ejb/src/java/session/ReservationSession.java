@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.NOT_SUPPORTED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Queries;
 import rental.Quote;
@@ -42,6 +43,7 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public void getAvailableCarTypes(Date start, Date end) {
         List<CarType> res = queries.getAvailableCarTypes(em, start, end);
         for (Object type : res)
@@ -50,11 +52,10 @@ public class ReservationSession implements ReservationSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO: is transactie nodig omdat we meerdere queries doen?
     public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
-	for (String company : queries.getAllRentalCompanies(em)) {
+	for (CarRentalCompany company : queries.getAllRentalCompaniesObject(em)) {
             try {
-                quotes.add(queries.getRentalCompany(em, company).createQuote(constraints, renter));
+                quotes.add(company.createQuote(constraints, renter));
                 return;
             } catch (ReservationException exception) {
                 System.out.println(exception.getMessage());
@@ -109,7 +110,7 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO: transactie nodig?
+    // TODO
     public String getCheapestCarType(Date start, Date end, String region) {
         return queries.getCheapestAvailableCarType(em, start, end, region).getName();
     }

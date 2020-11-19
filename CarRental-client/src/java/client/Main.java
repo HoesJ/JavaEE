@@ -28,10 +28,6 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
         ManagerSessionRemote ms = getNewManagerSession("");
         ms.addRentalCompany("dockx.csv");
         ms.addRentalCompany("hertz.csv");
-        
-        // TODO: remove
-        // Add your own queries here
-        System.out.println("Result:");
         return this;
     }
 

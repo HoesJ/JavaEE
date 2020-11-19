@@ -58,6 +58,7 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public int getNumberOfReservations(String company, String type, int id) {
         try {
             return queries.getNumberOfReservations(em, company, type, id);
@@ -69,6 +70,7 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public int getNumberOfReservations(String company, String type) {
         try {
             return queries.getNumberOfReservations(em, company, type);
@@ -80,6 +82,7 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public int getNumberOfReservationsByRenter(String name) {
         try {
             return queries.getNumberOfReservationsByRenter(em, name);
@@ -91,6 +94,7 @@ public class ManagerSession implements ManagerSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public Set<String> getBestClients() {
         try {
             return new HashSet<>(queries.getBestClients(em));
@@ -102,6 +106,7 @@ public class ManagerSession implements ManagerSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
         try {
             return queries.getMostPopularCarType(em, carRentalCompanyName, year);
@@ -113,6 +118,7 @@ public class ManagerSession implements ManagerSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // TODO
     public int getNumberOfReservationsByCarType(String carRentalName, String carType) {
         try {
             return queries.getNumberOfReservations(em, carRentalName, carType);
@@ -133,14 +139,13 @@ public class ManagerSession implements ManagerSessionRemote {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, "bad file", ex);
         } catch (IOException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
-            return; //TODO: remove this
         }
     }
     
     /**
      * Loading Car rental companies
      */
+    // TODO
     public static CrcData loadData(String datafile)
             throws NumberFormatException, IOException {
 
