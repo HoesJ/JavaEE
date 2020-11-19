@@ -43,7 +43,6 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO
     public void getAvailableCarTypes(Date start, Date end) {
         List<CarType> res = queries.getAvailableCarTypes(em, start, end);
         for (Object type : res)
@@ -52,6 +51,7 @@ public class ReservationSession implements ReservationSessionRemote {
 
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
+    // No transaction is needed, because quotes are tentative reservations.
     public void createQuote(String renter, ReservationConstraints constraints) throws ReservationException {
 	for (CarRentalCompany company : queries.getAllRentalCompaniesObject(em)) {
             try {
@@ -110,7 +110,6 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    // TODO
     public String getCheapestCarType(Date start, Date end, String region) {
         return queries.getCheapestAvailableCarType(em, start, end, region).getName();
     }
