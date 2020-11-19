@@ -43,10 +43,8 @@ public class ReservationSession implements ReservationSessionRemote {
     
     @Override
     @TransactionAttribute(NOT_SUPPORTED)
-    public void getAvailableCarTypes(Date start, Date end) {
-        List<CarType> res = queries.getAvailableCarTypes(em, start, end);
-        for (Object type : res)
-            System.out.println(type);
+    public List<CarType> getAvailableCarTypes(Date start, Date end) {
+        return queries.getAvailableCarTypes(em, start, end);
     }
 
     @Override
