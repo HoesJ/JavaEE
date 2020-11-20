@@ -57,6 +57,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservations(String company, String type, int id) {
         try {
             return queries.getNumberOfReservations(em, company, type, id);
@@ -67,6 +68,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservations(String company, String type) {
         try {
             return queries.getNumberOfReservations(em, company, type);
@@ -77,6 +79,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservationsByRenter(String name) {
         try {
             return queries.getNumberOfReservationsByRenter(em, name);
@@ -87,6 +90,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public Set<String> getBestClients() {
         try {
             return new HashSet<>(queries.getBestClients(em));
@@ -97,6 +101,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
         try {
             return queries.getMostPopularCarType(em, carRentalCompanyName, year);
@@ -107,6 +112,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
     
     @Override
+    @TransactionAttribute(NOT_SUPPORTED)
     public int getNumberOfReservationsByCarType(String carRentalName, String carType) {
         try {
             return queries.getNumberOfReservations(em, carRentalName, carType);
